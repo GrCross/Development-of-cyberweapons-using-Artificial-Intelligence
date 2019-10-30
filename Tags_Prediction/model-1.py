@@ -127,8 +127,6 @@ def tfidf_features(X_train, X_val, X_test):
 X_train_tfidf, X_val_tfidf, X_test_tfidf, tfidf_vocab = tfidf_features(X_train, X_val, X_test)
 tfidf_reversed_vocab = {i:word for word,i in tfidf_vocab.items()}
 
-tfidf_vocab['c++']
-tfidf_reversed_vocab[1976]
 
 
 #model 

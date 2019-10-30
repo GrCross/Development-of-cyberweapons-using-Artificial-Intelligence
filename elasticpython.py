@@ -9,8 +9,8 @@ from elasticsearch import Elasticsearch
 from config import *
 
 # create instance of elasticsearch
-es = Elasticsearch()
-f = open("prueba.tsv","+w")
+es = Elasticsearch('http://192.168.0.13:9200/')
+f = open("prueba.tsv","+w",encoding="utf-8")
 f.write("title	tags"+'\n')
 
 class TweetStreamListener(StreamListener):
@@ -57,7 +57,8 @@ class TweetStreamListener(StreamListener):
             zz=i["text"]
             tmp.append("'"+zz+"'")
         string_hash="["+", ".join(tmp)+"]"
-        string_final=dict_data["text"]+"  "+string_hash
+        text = dict_data["text"].replace('\n','')
+        string_final=text+"\t"+string_hash
         f.write("%s\r" % string_final)
         return True
 
