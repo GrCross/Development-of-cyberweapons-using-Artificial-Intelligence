@@ -10,6 +10,28 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from ast import literal_eval
 
+
+def cleanEnters(filename):
+    f = open(filename,encoding="utf-8")
+    oyt =[]
+    while True:
+         # read line
+        linet=f.readline()
+        line = f.readline().strip()
+        if line.endswith("]"):
+            oyt.append(linet)
+        # in python 2, print line
+        # in python 3
+        # check if line is not empty
+        if not line:
+            break
+    f.close()
+    f = open("train.tsv","w",encoding="utf-8")
+    f.writelines(oyt)
+    f.close()
+    print("termino")
+
+
 #read the data
 def read_data(filename):
     data = pd.read_csv(filename, sep='\t')
@@ -17,7 +39,9 @@ def read_data(filename):
     #from untrusted sources without the need to parse the values oneself.
     data['tags'] = data['tags'].apply(literal_eval)
     return data
-
+    
+cleanEnters("train.tsv")
+cleanEnters("validation.tsv")
 train = read_data('train.tsv')
 validation = read_data('validation.tsv')
 test = pd.read_csv('test.tsv', sep='\t')
