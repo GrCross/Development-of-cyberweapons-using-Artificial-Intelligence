@@ -15,7 +15,7 @@ f = open("prueba.tsv","+w",encoding="utf-8")
 f.write("title	tags"+'\n')
 test = open("test.tsv","+w",encoding="utf-8")
 test.write("title"+'\n')
-hashList = ['Donald Trump','news','white house','inmigrant','EEUU','migration','wall','siria','middle east','mexico','onu']
+hashList = ['daesh','isis','terrorism','alratv','wahhabism','sufiimammehdigoharshahi','islam','extremism','religion','quran','murder','wahhabi','muslims','jihad','alqaeda','islamicstate','taliban','younusalgohar','destiny','hatecrime','igbtq','AbuBakrAIBaghdadi','Libya','SirLanka']
 
 class TweetStreamListener(StreamListener):
     # on success

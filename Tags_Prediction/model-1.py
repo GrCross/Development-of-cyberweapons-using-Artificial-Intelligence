@@ -14,19 +14,23 @@ from ast import literal_eval
 def cleanEnters(filename):
     f = open(filename,encoding="utf-8")
     oyt =[]
+    linet=f.readline()
+    oyt.append(linet)
     while True:
          # read line
         linet=f.readline()
         line = f.readline().strip()
         if line.endswith("]"):
             oyt.append(linet)
+            
         # in python 2, print line
         # in python 3
         # check if line is not empty
         if not line:
+            print()
             break
     f.close()
-    f = open("train.tsv","w",encoding="utf-8")
+    f = open(filename,"w",encoding="utf-8")
     f.writelines(oyt)
     f.close()
     print("termino")
@@ -168,22 +172,42 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.decomposition.nmf import NMF
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import AdaBoostClassifier
+import pickle
 
-def train_classifier(X_train, y_train, C=1.0, penalty='l2'):
+def train_classifier(X_train, y_train, number, C=1.0, penalty='l2'):
     """
       X_train, y_train — training data
       
       return: trained classifier
     """
-    
+    print("empezo el train_classifier")
     lr = LogisticRegression(solver='newton-cg',C=C, penalty=penalty,n_jobs=-1)
     # lr.fit(X_train, y_train)
     ovr = OneVsRestClassifier(lr)
     ovr.fit(X_train, y_train)
+    print("SOY OVR!!!!!!!!!")
+    print(ovr)
+    if number == 1:
+        pickle_out = open("ovrMyBag","wb")
+        pickle.dump(ovr,pickle_out)
+        pickle_out.close()
+    else:
+        pickle_out = open("ovrTdif","wb")
+        pickle.dump(ovr,pickle_out)
+        pickle_out.close()
     return ovr
+import os;
 
-classifier_mybag = train_classifier(X_train_mybag, y_train)
-classifier_tfidf = train_classifier(X_train_tfidf, y_train)
+if(os.path.exists("ovrMyBag") and  os.path.exists("ovrTdif")):
+    print("entre aquiii")
+    pickle_inMyBack = open("ovrMyBag","rb")
+    pickle_inTdif = open("ovrTdif","rb")
+    classifier_mybag = pickle.load(pickle_inMyBack)
+    classifier_tfidf = pickle.load(pickle_inTdif)
+else:
+    classifier_mybag = train_classifier(X_train_mybag, y_train,1)
+    classifier_tfidf = train_classifier(X_train_tfidf, y_train,2)
+
 
 y_val_predicted_labels_mybag = classifier_mybag.predict(X_val_mybag)
 y_val_predicted_scores_mybag = classifier_mybag.decision_function(X_val_mybag)
@@ -194,7 +218,8 @@ y_val_predicted_scores_tfidf = classifier_tfidf.decision_function(X_val_tfidf)
 y_val_pred_inversed = mlb.inverse_transform(y_val_predicted_labels_tfidf)
 y_val_inversed = mlb.inverse_transform(y_val)
 
-for i in range(20):
+
+for i in range(len(X_val)):
     print('Title:\t{}\nTrue labels:\t{}\nPredicted labels:\t{}\n\n'.format(
         X_val[i],
         ','.join(y_val_inversed[i]),
